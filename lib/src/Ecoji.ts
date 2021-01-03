@@ -9,12 +9,15 @@ export default class Ecoji {
   }
 
   public encode(input: string): string {
+    return this.encodeBuffer(Buffer.from(input.encode(), 'binary'))
+  }
+
+  public encodeBuffer(input: Buffer): string {
     let output = ''
 
-    const bufferIterator = Buffer.from(input.encode(), 'binary')
-    const values = bufferIterator.values()
+    const values = input.values()
 
-    let length = bufferIterator.length
+    let length = input.length
 
     while (length > 0) {
       length -= 5
@@ -85,7 +88,13 @@ export default class Ecoji {
   }
 
   public decode(input: string): string {
-    let output = ''
+    return this.decodeBuffer(input)
+      .toString('binary')
+      .decode()
+  }
+
+  public decodeBuffer(input: string): Buffer {
+    let output: number[] = []
 
     const emojis = input
       .replace(/(?:\r\n|\r|\n)/g, '')
@@ -143,12 +152,9 @@ export default class Ecoji {
         out = out.slice(0, 4)
       }
 
-      output += out.reduce((result, item) => {
-        result += String.fromCharCode(item)
-        return result
-      }, '')
+      output = output.concat(out)
     }
 
-    return output.decode()
+    return Buffer.from(new Uint8Array(output))
   }
 }
