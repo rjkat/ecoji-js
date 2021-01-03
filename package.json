@@ -24,10 +24,6 @@
   "engines": {
     "node": ">=8"
   },
-  "files": [
-    "dist/",
-    "bin"
-  ],
   "bin": {
     "ecoji": "bin/cli.js"
   },
